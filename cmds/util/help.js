@@ -1,10 +1,5 @@
 const { EmbedBuilder } = require("@discordjs/builders");
-const {
-  ChatInputCommandInteraction,
-  Client,
-  Embed,
-  Colors,
-} = require("discord.js");
+const { ChatInputCommandInteraction, Client, Colors } = require("discord.js");
 const { loadFiles } = require("../../functions/loadFiles");
 module.exports = {
   name: "help",

@@ -22,7 +22,7 @@ module.exports = {
       )
       .setFields({
         name: "Commands:",
-        value: Help.join(`\n> `).toString(),
+        value: "> " + Help.join(`\n> `).toString(),
       });
 
     return interaction.reply({ embeds: [Reply], ephemeral: true });

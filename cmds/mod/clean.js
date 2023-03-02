@@ -40,6 +40,7 @@ module.exports = {
     const reason = options.getString("reason") || "No reason provided.";
 
     const msgs = await channel.messages.fetch();
+
     const filtered = [];
     if (target) {
       let i = 0;
@@ -49,35 +50,55 @@ module.exports = {
           i++;
         }
       });
-
-      channel.bulkDelete(filtered, true);
+      if (filtered.length > 100) {
+        var quotient = Math.floor(filtered / 100);
+        var remainder = filtered % 100;
+        for (var i = 0; i < quotient; i++) {
+          await channel.bulkDelete(100, true);
+        }
+        if (0 < remainder < 100) {
+          await channel.bulkDelete(remainder, true);
+        }
+      } else await channel.bulkDelete(filtered, true);
     }
-    channel.bulkDelete(amount, true);
 
-    let Amount = amount;
-    if (filtered.length > 0) {
-      Amount = filtered.length;
-    }
-    const Embed = new EmbedBuilder()
-      .setColor(Colors.Orange)
-      .setDescription(
-        `> :broom: Successfully cleaned ${Amount} messages from this channel.\n> 📁 Reason: ${reason}`
-      );
-    if (target) {
-      Embed.setAuthor({
-        iconURL: target.avatarURL(),
-        name: target.user.username + "#" + target.user.discriminator,
-      });
-    }
-    await interaction.reply({
-      embeds: [Embed],
-    });
-
-    setTimeout(async () => {
-      const reply = await interaction.fetchReply();
-      if (reply.deletable) {
-        await reply.delete();
+    if (amount > 100) {
+      const quotient = Math.floor(Amount / 100);
+      const remainder = Amount % 100;
+      for (var i = 0; i < quotient; i++) {
+        await channel.bulkDelete(100, true);
       }
-    }, ms("10s"));
+      if (0 < remainder < 100) {
+        await channel.bulkDelete(remainder, true);
+      } else {
+        await channel.bulkDelete(amount, true);
+      }
+
+      let Amount = amount;
+      if (filtered.length > 0) {
+        Amount = filtered.length;
+      }
+      const Embed = new EmbedBuilder()
+        .setColor(Colors.Orange)
+        .setDescription(
+          `> :broom: Successfully cleaned ${Amount} messages from this channel.\n> 📁 Reason: ${reason}`
+        );
+      if (target) {
+        Embed.setAuthor({
+          iconURL: target.avatarURL(),
+          name: target.user.username + "#" + target.user.discriminator,
+        });
+      }
+      await interaction.reply({
+        embeds: [Embed],
+      });
+
+      setTimeout(async () => {
+        const reply = await interaction.fetchReply();
+        if (reply.deletable) {
+          await reply.delete();
+        }
+      }, ms("10s"));
+    }
   },
 };

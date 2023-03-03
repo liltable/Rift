@@ -68,12 +68,6 @@ module.exports = {
         ephemeral: true,
       });
     }
-    Command.execute(interaction, client).then(() => {
-      console.log(
-        `${interaction.user.username + "#" + interaction.user.discriminator} (${
-          interaction.user.id
-        }) used command: ${Command.name}.`
-      );
-    });
+    Command.execute(interaction, client);
   },
 };

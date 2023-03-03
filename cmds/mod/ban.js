@@ -7,6 +7,7 @@ const {
 } = require("discord.js");
 const icons = require("../../icons/urls");
 const { storage } = require("../../schemas/guild");
+const ms = require("ms");
 
 module.exports = {
   name: "ban",
@@ -27,17 +28,7 @@ module.exports = {
     {
       name: "messages",
       description: "Delete the target's messages?",
-      type: ApplicationCommandOptionType.String,
-      choices: [
-        {
-          name: "After 7 days",
-          value: "7d",
-        },
-        {
-          name: "After 30 days",
-          value: "30d",
-        },
-      ],
+      type: ApplicationCommandOptionType.Boolean,
     },
   ],
   /**
@@ -47,11 +38,14 @@ module.exports = {
    */
   async execute(interaction, client) {
     const { guild, member, options } = interaction;
-    const target = guild.members.cache.get(
+
+    const target = await guild.members.fetch(
       options.getMentionable("target", true).id
     );
+
     const reason = options.getString("reason") || "No reason provided.";
-    const delMsgs = options.getString("messages") || "30d";
+
+    const delMsgs = options.getBoolean("messages") ? "604800" : "0";
 
     const Timestamp = parseInt(interaction.createdTimestamp / 1000);
 
@@ -76,8 +70,8 @@ module.exports = {
         `> Member banned.\n> Member: ${target || "`Failed to fetch.`"} (${
           target.id
         })\n> Reason: ${reason}\n> Staff: ${
-          member || `\`Failed to fetch.\``
-        } (${member.id})\n> Date: <t:${Timestamp}:T> | <t:${Timestamp}:R>`
+          member.user || `\`Failed to fetch.\``
+        } (${member.user.id})\n> Date: <t:${Timestamp}:T> | <t:${Timestamp}:R>`
       );
 
     if (!target.bannable) {
@@ -91,46 +85,47 @@ module.exports = {
         ],
         ephemeral: true,
       });
+    }
 
-      target.ban({
-        deleteMessageSeconds: ms(delMsgs) * 1000,
-        reason: reason,
-      });
+    target.ban({
+      deleteMessageSeconds: delMsgs,
+      reason: reason,
+    });
 
-      interaction.reply({ embeds: [Reply] });
-      let msg = await interaction.fetchReply();
+    interaction.reply({ embeds: [Reply] });
+    let msg = await interaction.fetchReply();
 
-      setTimeout(() => {
-        if (msg.deletable) {
-          msg.delete();
-        }
-      }, ms("10s"));
-
-      const docs = await storage.findOne({ guild: guild.id });
-      if (!docs) return;
-      if (!docs.logs.enabled) return;
-      else {
-        const channel = guild.channels.cache.get(docs.logs.channel);
-        if (!channel) {
-          docs.logs.enabled = false;
-          docs.logs.channel = undefined;
-          await docs.save();
-          try {
-            client.users.cache.get(guild.ownerId).send({
-              embeds: [
-                new EmbedBuilder()
-                  .setColor(Colors.Red)
-                  .setDescription(
-                    `> It seems like the logs channel set for your server (${guild.name}) isn't correct.\n> Please reset it as soon as possible in order to prevent future errors.\n> In the meantime, logging has been disabled for your server.`
-                  ),
-              ],
-            });
-          } catch (err) {
-            return;
-          }
-        }
-        channel.send({ embeds: [Log] });
+    setTimeout(() => {
+      if (msg.deletable) {
+        msg.delete();
       }
+    }, ms("10s"));
+
+    const docs = await storage.findOne({ guild: guild.id });
+
+    if (!docs) return;
+    if (!docs.logs.enabled) return;
+    else {
+      const channel = guild.channels.cache.get(docs.logs.channel);
+
+      if (!channel) {
+        docs.logs.enabled = false;
+        docs.logs.channel = undefined;
+        await docs.save();
+        try {
+          (await guild.fetchOwner()).user.send({
+            embeds: [
+              new EmbedBuilder()
+                .setColor(Colors.Red)
+                .setDescription(
+                  `> It seems like the logs channel set for your server (${guild.name}) isn't correct.\n> Please reset it as soon as possible in order to prevent future errors.\n> In the meantime, logging has been disabled for your server.`
+                ),
+            ],
+          });
+        } catch (err) {}
+      }
+
+      channel.send({ embeds: [Log] });
     }
   },
 };

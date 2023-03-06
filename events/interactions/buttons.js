@@ -8,6 +8,7 @@ const {
 
 module.exports = {
   name: "interactionCreate",
+  function: "buttons",
   /**
    *
    * @param {ButtonInteraction} interaction

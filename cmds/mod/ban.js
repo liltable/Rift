@@ -4,6 +4,9 @@ const {
   EmbedBuilder,
   Colors,
   Client,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const icons = require("../../icons/urls");
 const { storage } = require("../../schemas/guild");
@@ -49,31 +52,6 @@ module.exports = {
 
     const Timestamp = parseInt(interaction.createdTimestamp / 1000);
 
-    const Reply = new EmbedBuilder()
-      .setColor(Colors.Red)
-      .setThumbnail(`${target.user.avatarURL()}`)
-      .setDescription(
-        `> :no_entry_sign: Banned ${
-          target || `\`Unknown\``
-        }\n> Reason: ${reason}`
-      );
-
-    const Log = new EmbedBuilder()
-      .setColor(Colors.Red)
-      .setThumbnail(`${icons.delete}`)
-      .setTitle(`${client.user.username} | Logs`)
-      .setAuthor({
-        iconURL: target.user.avatarURL(),
-        name: target.user.username + "#" + target.user.discriminator,
-      })
-      .setDescription(
-        `> Member banned.\n> Member: ${target || "`Failed to fetch.`"} (${
-          target.id
-        })\n> Reason: ${reason}\n> Staff: ${
-          member.user || `\`Failed to fetch.\``
-        } (${member.user.id})\n> Date: <t:${Timestamp}:T> | <t:${Timestamp}:R>`
-      );
-
     if (!target.bannable) {
       interaction.reply({
         embeds: [
@@ -87,45 +65,31 @@ module.exports = {
       });
     }
 
-    target.ban({
-      deleteMessageSeconds: delMsgs,
-      reason: reason,
+    const Row = new ActionRowBuilder().setComponents(
+      new ButtonBuilder()
+        .setCustomId(
+          `ban.${target.id}.${reason}.${delMsgs}.${guild.id}.${member.user.id}`
+        )
+        .setStyle(ButtonStyle.Success)
+        .setLabel("Confirm"),
+      new ButtonBuilder()
+        .setCustomId("exit")
+        .setLabel("Cancel")
+        .setStyle(ButtonStyle.Danger)
+    );
+
+    const Reply = new EmbedBuilder()
+      .setColor(Colors.Red)
+      .setAuthor({
+        iconURL: target.user.avatarURL(),
+        name: target.user.username + "#" + target.user.discriminator,
+      })
+      .setDescription(`Ban ${target} for **${reason}**?`);
+
+    return interaction.reply({
+      embeds: [Reply],
+      components: [Row],
+      ephemeral: true,
     });
-
-    interaction.reply({ embeds: [Reply] });
-    let msg = await interaction.fetchReply();
-
-    setTimeout(() => {
-      if (msg.deletable) {
-        msg.delete();
-      }
-    }, ms("10s"));
-
-    const docs = await storage.findOne({ guild: guild.id });
-
-    if (!docs) return;
-    if (!docs.logs.enabled) return;
-    else {
-      const channel = guild.channels.cache.get(docs.logs.channel);
-
-      if (!channel) {
-        docs.logs.enabled = false;
-        docs.logs.channel = undefined;
-        await docs.save();
-        try {
-          (await guild.fetchOwner()).user.send({
-            embeds: [
-              new EmbedBuilder()
-                .setColor(Colors.Red)
-                .setDescription(
-                  `> It seems like the logs channel set for your server (${guild.name}) isn't correct.\n> Please reset it as soon as possible in order to prevent future errors.\n> In the meantime, logging has been disabled for your server.`
-                ),
-            ],
-          });
-        } catch (err) {}
-      }
-
-      channel.send({ embeds: [Log] });
-    }
   },
 };

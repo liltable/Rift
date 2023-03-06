@@ -11,7 +11,7 @@ module.exports = {
       await interaction.message.delete();
     } else {
       return interaction.reply({
-        content: "Failed to delete this message.",
+        content: `Failed to delete this message.\nIf the message is ephemeral, please click "Dismiss Message" at the bottom of the message.`,
         ephemeral: true,
       });
     }

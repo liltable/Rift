@@ -2,6 +2,7 @@ const { Client } = require("discord.js");
 
 module.exports = {
   name: "ready",
+  function: "ready",
   once: true,
   /**
    *

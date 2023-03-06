@@ -19,8 +19,9 @@ async function loadCmds(client) {
 
     if (!cmd.name) return cmdTable.addRow(File, "🔴");
     if (!cmd.description) return cmdTable.addRow(cmd.name, "🔴");
-    if (cmd.permission && !PermissionFlagsBits[cmd.permission])
+    if (cmd.permission && !PermissionFlagsBits[cmd.permission]) {
       return cmdTable.addRow(cmd.name, "🔧 (Perm)");
+    }
 
     cmdTable.addRow(cmd.name, "🟢");
     client.commands.set(cmd.name, cmd);

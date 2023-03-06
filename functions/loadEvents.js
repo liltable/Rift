@@ -24,6 +24,7 @@ async function loadEvents(client) {
     }`;
 
     if (!event.name) return table.addRow(File, "🔴");
+    if (!event.function) return table.addRow(event.name, "🔴 ");
 
     if (event.rest) {
       if (event.once) client.execute(event.name, execute);
@@ -33,7 +34,7 @@ async function loadEvents(client) {
       else client.on(event.name, execute);
     }
 
-    table.addRow(event.name, "🟩");
+    table.addRow(event.function, "🟩");
   });
 
   return console.log(table.toString(), `\nLoaded ${Files.length} event(s).`);

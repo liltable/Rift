@@ -3,6 +3,7 @@ const {
   ApplicationCommandOptionType,
   EmbedBuilder,
   Colors,
+  Embed,
 } = require("discord.js");
 const client = require("../../");
 const { load } = require("../../functions/load");
@@ -20,6 +21,11 @@ module.exports = {
     {
       name: "events",
       description: "Reloads the client events.",
+      type: ApplicationCommandOptionType.Subcommand,
+    },
+    {
+      name: "buttons",
+      description: "Reload the client buttons.",
       type: ApplicationCommandOptionType.Subcommand,
     },
   ],
@@ -71,6 +77,26 @@ module.exports = {
           });
         }
         break;
+      case "buttons": {
+        await load.buttons(client).then(async () => {
+          console.log(
+            `Client buttons reload by ${
+              interaction.user.username + "#" + interaction.user.discriminator
+            } (${interaction.user.id})`
+          );
+        });
+
+        return interaction.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setColor(Colors.Green)
+              .setDescription(
+                `> :white_check_mark: Successfully reload the client's buttons.`
+              ),
+          ],
+          ephemeral: true,
+        });
+      }
     }
   },
 };

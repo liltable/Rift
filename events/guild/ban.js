@@ -19,13 +19,11 @@ module.exports = {
   async execute(interaction, client) {
     if (!interaction.isButton()) return;
     if (!interaction.customId.startsWith("ban")) return;
-    const args = interaction.customId.split(".").splice(0, 1);
-    var reason = args[1];
-    var delMsgs = args[2];
-    var guild = client.guilds.cache.get(args[3]);
-    var target = guild.members.cache.get(args[0]);
-    const member = guild.members.cache.get(args[4]);
-
+    const { guild, member } = interaction;
+    const args = interaction.customId.split(".");
+    var reason = args[2];
+    var delMsgs = args[3];
+    var target = await guild.members.fetch(args[1]);
     await target.ban({
       reason: reason,
       deleteMessageSeconds: delMsgs,

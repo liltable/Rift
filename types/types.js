@@ -1,14 +1,14 @@
-const Types = {
-  Logs: {
-    Channel: "channel",
-    Server: "server",
-    Member: "member",
-    Roles: "roles",
-    Staff: "staff",
-    Message: "message",
+const types = {
+  logs: {
+    channel: "channel",
+    server: "server",
+    member: "member",
+    roles: "roles",
+    staff: "staff",
+    message: "message",
   },
 };
 
 module.exports = {
-  Types,
+  types,
 };

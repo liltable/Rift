@@ -7,7 +7,7 @@ module.exports = {
    * @param {ButtonInteraction} interaction
    */
   async execute(interaction) {
-    if (interaction.message?.deletable) {
+    if (interaction.message && interaction.message.deletable) {
       await interaction.message.delete();
     } else {
       return interaction.reply({

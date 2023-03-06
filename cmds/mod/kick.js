@@ -1,25 +1,24 @@
 const {
-  ApplicationCommandOptionType,
-  ChatInputCommandInteraction,
-  EmbedBuilder,
-  Colors,
-  Client,
   ActionRowBuilder,
   ButtonBuilder,
+  EmbedBuilder,
+} = require("@discordjs/builders");
+const {
+  ChatInputCommandInteraction,
+  Client,
+  ApplicationCommandOptionType,
   ButtonStyle,
+  Colors,
 } = require("discord.js");
-const icons = require("../../icons/urls");
-const { storage } = require("../../schemas/guild");
-const ms = require("ms");
 
 module.exports = {
-  name: "ban",
-  description: "Bans a guild member.",
-  permission: "BanMembers",
+  name: "kick",
+  description: "Removes a member from the server.",
+  permission: "KickMembers",
   options: [
     {
       name: "target",
-      description: "Select a member.",
+      description: "Select a target.",
       type: ApplicationCommandOptionType.Mentionable,
       required: true,
     },
@@ -28,48 +27,32 @@ module.exports = {
       description: "Input a reason.",
       type: ApplicationCommandOptionType.String,
     },
-    {
-      name: "messages",
-      description: "Delete the target's messages?",
-      type: ApplicationCommandOptionType.Boolean,
-    },
   ],
   /**
    *
    * @param {ChatInputCommandInteraction} interaction
-   * @param {Client} client
+   * @param {String} client
    */
   async execute(interaction, client) {
-    const { guild, member, options } = interaction;
-
-    const target = await guild.members.fetch(
-      options.getMentionable("target", true).id
-    );
-
+    const { guild, options } = interaction;
+    const target = guild.members.cache.get(options.getMentionable("target").id);
     const reason = options.getString("reason") || "No reason provided.";
 
-    const delMsgs = options.getBoolean("messages") ? "604800" : "0";
-
-    const Timestamp = parseInt(interaction.createdTimestamp / 1000);
-
-    if (!target.bannable) {
-      interaction.reply({
+    if (!target.kickable)
+      return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setColor(Colors.Red)
-            .setDescription(
-              `> :no_entry_sign: Missing permissions: \`${this.permission}\``
-            ),
+            .setDescription(`> Missing permissions: \`${this.permission}\``),
         ],
         ephemeral: true,
       });
-    }
 
     const Row = new ActionRowBuilder().setComponents(
       new ButtonBuilder()
-        .setCustomId(`ban.${target.id}.${reason}.${delMsgs}`)
-        .setStyle(ButtonStyle.Success)
-        .setLabel("Confirm"),
+        .setCustomId(`kick.${target.id}.${reason}`)
+        .setLabel("Confirm")
+        .setStyle(ButtonStyle.Success),
       new ButtonBuilder()
         .setCustomId("exit")
         .setLabel("Cancel")
@@ -78,11 +61,11 @@ module.exports = {
 
     const Reply = new EmbedBuilder()
       .setColor(Colors.Red)
+      .setDescription(`> Kick ${target} for **${reason}**?`)
       .setAuthor({
-        iconURL: target.user.avatarURL(),
         name: target.user.username + "#" + target.user.discriminator,
-      })
-      .setDescription(`Ban ${target} for **${reason}**?`);
+        iconURL: target.user.avatarURL(),
+      });
 
     await interaction.reply({
       embeds: [Reply],

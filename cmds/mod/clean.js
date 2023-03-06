@@ -53,7 +53,6 @@ module.exports = {
       return arr.filter((item, index) => arr.indexOf(item) === index);
     }
 
-    //GIANT FUNCTION
     let filtered = [];
     if (contentFilter) {
       msgs.forEach(async (msg) => {

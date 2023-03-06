@@ -63,19 +63,23 @@ module.exports = {
             guild.name
           }**. If you would like to, please use the ${"`/config`"} command in your server.`
         );
-      if ((owner.dmChannel.lastMessage.embeds[0] = embed)) {
+      if (
+        owner.dmChannel?.lastMessage?.embeds[0]?.description ===
+        embed.data.description
+      ) {
         return;
-      }
-      try {
-        owner.send({
-          embeds: [embed],
-        });
-      } catch (err) {
-        console.log(
-          `Failed to notify owner (${
-            owner.user.username + "#" + owner.user.discriminator
-          }) of guild (${guild.name}) that they don't have logging enabled.`
-        );
+      } else {
+        try {
+          owner.send({
+            embeds: [embed],
+          });
+        } catch (err) {
+          console.log(
+            `Failed to notify owner (${
+              owner.user.username + "#" + owner.user.discriminator
+            }) of guild (${guild.name}) that they don't have logging enabled.`
+          );
+        }
       }
     }
     if (

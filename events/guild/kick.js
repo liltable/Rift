@@ -19,6 +19,16 @@ module.exports = {
   async execute(interaction, client) {
     if (!interaction.isButton()) return;
     if (!interaction.customId.startsWith("kick")) return;
+    const cache = client.cache.get(interaction.message.id);
+    if (cache !== interaction.user.id)
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder().setDescription(
+            `> :no_entry_sign: This isn't your button menu.`
+          ),
+        ],
+        ephemeral: true,
+      });
     const { member, guild } = interaction;
     const args = interaction.customId.split(".");
     const target = await guild.members.fetch(args[1]);

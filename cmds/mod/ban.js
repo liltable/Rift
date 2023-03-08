@@ -50,8 +50,6 @@ module.exports = {
 
     const delMsgs = options.getBoolean("messages") ? "604800" : "0";
 
-    const Timestamp = parseInt(interaction.createdTimestamp / 1000);
-
     if (!target.bannable) {
       interaction.reply({
         embeds: [

@@ -8,6 +8,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
+const ms = require("ms");
 
 module.exports = {
   name: "timeout",
@@ -38,13 +39,24 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    const { options, member, guild } = interaction;
+    const { options, guild } = interaction;
     const target = guild.members.cache.get(
       options.getMentionable("target", true).id
     );
     const duration = options.getString("duration", true);
-    const reason = options.getString("reason", true) || "No reason provided.";
-    const timestamp = parseInt(interaction.createdTimestamp / 1000);
+    const reason = options.getString("reason") || "No reason provided.";
+
+    if (!ms(duration))
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Colors.Red)
+            .setDescription(
+              `> :no_entry_sign: Invalid parameter (duration): \`Must be a shortened duration: e.g 2d (two days), 30m (30 minutes), 2h (two hours).\``
+            ),
+        ],
+        ephemeral: true,
+      });
 
     if (!target.moderatable) {
       return interaction.reply({
@@ -76,10 +88,14 @@ module.exports = {
         .setStyle(ButtonStyle.Danger)
     );
 
-    return interaction.reply({
+    await interaction.reply({
       embeds: [Reply],
       components: [Row],
-      ephemeral: true,
     });
+
+    return client.cache.set(
+      (await interaction.fetchReply()).id,
+      interaction.user.id
+    );
   },
 };

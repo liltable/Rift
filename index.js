@@ -21,6 +21,7 @@ client.login(client.config.token).then(async () => {
     load.commands(client);
     load.events(client);
     load.buttons(client);
+    load.guilds(client);
   }
 });
 module.exports = client;

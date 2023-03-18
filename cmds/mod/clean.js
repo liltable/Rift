@@ -24,15 +24,15 @@ module.exports = {
       type: ApplicationCommandOptionType.Mentionable,
     },
     {
-      name: "reason",
-      type: ApplicationCommandOptionType.String,
-      description: "Input a reason.",
-    },
-    {
       name: "filter",
       type: ApplicationCommandOptionType.String,
       description:
         "Filter for a specific word/phrase in the messages to be cleaned.",
+    },
+    {
+      name: "reason",
+      type: ApplicationCommandOptionType.String,
+      description: "Input a reason.",
     },
   ],
   /**
@@ -112,7 +112,7 @@ module.exports = {
     if (reason) embDesc.push(`> Reason: ${reason}`);
     if (target)
       embDesc.push(
-        `> Target: ${target || "`Failed to fetch.`"} (${target.id})`
+        `> Target: ${target || "`Failed to fetch.`"} (${target.id || `\`-\``})`
       );
 
     embDesc.push(

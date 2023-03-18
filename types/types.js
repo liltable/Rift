@@ -7,6 +7,10 @@ const types = {
     staff: "staff",
     message: "message",
   },
+  formats: {
+    yes: ":white_check_mark:",
+    no: ":no_entry_sign:",
+  },
 };
 
 module.exports = {

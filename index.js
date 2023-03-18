@@ -16,7 +16,7 @@ Database.connect(client.config.database, {
   console.log(`Successfully connected to cloud storage.`);
 });
 
-client.login(client.config.token).then(async () => {
+client.login(client.config.token).then(() => {
   if (client.application) {
     load.commands(client);
     load.events(client);

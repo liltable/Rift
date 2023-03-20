@@ -28,6 +28,11 @@ module.exports = {
       description: "Reload the client buttons.",
       type: ApplicationCommandOptionType.Subcommand,
     },
+    {
+      name: "all",
+      description: "Reloads all of the client's core components.",
+      type: ApplicationCommandOptionType.Subcommand,
+    },
   ],
   /**
    * @param {ChatInputCommandInteraction} interaction
@@ -77,10 +82,39 @@ module.exports = {
           });
         }
         break;
-      case "buttons": {
-        await load.buttons(client).then(async () => {
+      case "buttons":
+        {
+          await load.buttons(client).then(async () => {
+            console.log(
+              `Client buttons reloaded by ${
+                interaction.user.username + "#" + interaction.user.discriminator
+              } (${interaction.user.id})`
+            );
+          });
+
+          return interaction.reply({
+            embeds: [
+              new EmbedBuilder()
+                .setColor(Colors.Green)
+                .setDescription(
+                  `> :white_check_mark: Successfully reloaded the client's buttons.`
+                ),
+            ],
+            ephemeral: true,
+          });
+        }
+        break;
+      case "all": {
+        async function trueLoad(client) {
+          await load.buttons(client);
+          await load.commands(client);
+          await load.events(client);
+          await load.guilds(client);
+        }
+
+        await trueLoad(client).then(async () => {
           console.log(
-            `Client buttons reload by ${
+            `Client reloaded by ${
               interaction.user.username + "#" + interaction.user.discriminator
             } (${interaction.user.id})`
           );
@@ -91,7 +125,7 @@ module.exports = {
             new EmbedBuilder()
               .setColor(Colors.Green)
               .setDescription(
-                `> :white_check_mark: Successfully reload the client's buttons.`
+                `> :white_check_mark: Successfully reloaded the (entire) client.`
               ),
           ],
           ephemeral: true,

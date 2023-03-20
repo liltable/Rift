@@ -9,13 +9,13 @@ const {
   Client,
   Colors,
   ButtonStyle,
+  PermissionFlagsBits,
 } = require("discord.js");
 const { types } = require("../../types/types");
 
 module.exports = {
   name: "role",
   description: "Manages a role.",
-  permission: "ManageRoles",
   options: [
     {
       name: "grant",
@@ -67,6 +67,16 @@ module.exports = {
     switch (Sub) {
       case "grant":
         {
+          if (!member.permissions.has(PermissionFlagsBits.ManageRoles))
+            return interaction.reply({
+              embeds: [
+                new EmbedBuilder()
+                  .setColor(Colors.Red)
+                  .setDescription(`> ${types.formats.no} Invalid permissions.`),
+              ],
+              ephemeral: true,
+            });
+
           const Role = options.getRole("role", true);
           const Target = guild.members.cache.get(
             options.getMentionable("target", true).id

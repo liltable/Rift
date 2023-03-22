@@ -48,7 +48,11 @@ module.exports = {
     const reason = options.getString("reason");
 
     const msgs = await channel.messages.fetch();
-
+    /**
+     *
+     * @param {Array} arr
+     * @returns
+     */
     function removeDuplicates(arr) {
       return arr.filter((item, index) => arr.indexOf(item) === index);
     }
@@ -61,6 +65,16 @@ module.exports = {
         if (msg.content.toLowerCase().includes(contentFilter.toLowerCase())) {
           filtered.push(msg);
         }
+        filtered.forEach((msg) => {
+          if (
+            !msg.content.toLowerCase().includes(contentFilter.toLowerCase())
+          ) {
+            filtered.splice(
+              filtered.findIndex((message) => message === msg),
+              1
+            );
+          }
+        });
       });
     }
     if (target) {
@@ -70,6 +84,15 @@ module.exports = {
         if (msg.author.id === target.id) {
           filtered.push(msg);
         }
+
+        filtered.forEach((msg) => {
+          if (msg.author.id !== target.user.id) {
+            filtered.splice(
+              filtered.findIndex((message) => message === msg),
+              1
+            );
+          }
+        });
       });
     }
 

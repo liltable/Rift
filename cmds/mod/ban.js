@@ -8,9 +8,6 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
-const icons = require("../../icons/urls");
-const { storage } = require("../../schemas/guild");
-const ms = require("ms");
 
 module.exports = {
   name: "ban",
@@ -40,7 +37,7 @@ module.exports = {
    * @param {Client} client
    */
   async execute(interaction, client) {
-    const { guild, member, options } = interaction;
+    const { guild, options } = interaction;
 
     const target = await guild.members.fetch(
       options.getMentionable("target", true).id

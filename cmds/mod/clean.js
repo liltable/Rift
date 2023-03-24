@@ -3,6 +3,9 @@ const {
   ChatInputCommandInteraction,
   EmbedBuilder,
   Colors,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
 } = require("discord.js");
 const ms = require("ms");
 
@@ -38,7 +41,7 @@ module.exports = {
   /**
    * @param {ChatInputCommandInteraction} interaction
    */
-  async execute(interaction) {
+  async execute(interaction, client) {
     const { options, channel, guild } = interaction;
 
     const amount = options.getString("amount");
@@ -65,14 +68,11 @@ module.exports = {
         if (msg.content.toLowerCase().includes(contentFilter.toLowerCase())) {
           filtered.push(msg);
         }
-        filtered.forEach((msg) => {
+        filtered.forEach((msg, index) => {
           if (
             !msg.content.toLowerCase().includes(contentFilter.toLowerCase())
           ) {
-            filtered.splice(
-              filtered.findIndex((message) => message === msg),
-              1
-            );
+            filtered.splice(index, 1);
           }
         });
       });
@@ -85,12 +85,9 @@ module.exports = {
           filtered.push(msg);
         }
 
-        filtered.forEach((msg) => {
+        filtered.forEach((msg, index) => {
           if (msg.author.id !== target.user.id) {
-            filtered.splice(
-              filtered.findIndex((message) => message === msg),
-              1
-            );
+            filtered.splice(index, 1);
           }
         });
       });
@@ -155,13 +152,19 @@ module.exports = {
 
     interaction.reply({
       embeds: [Embed],
+      components: [
+        new ActionRowBuilder().setComponents(
+          new ButtonBuilder()
+            .setCustomId("exit")
+            .setLabel("Exit")
+            .setStyle(ButtonStyle.Danger)
+        ),
+      ],
     });
 
-    setTimeout(async () => {
-      const reply = await interaction.fetchReply();
-      if (reply.deletable) {
-        await reply.delete();
-      }
-    }, ms("15s"));
+    return client.cache.set(
+      (await interaction.fetchReply()).id,
+      interaction.user.id
+    );
   },
 };

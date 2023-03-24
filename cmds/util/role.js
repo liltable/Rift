@@ -132,60 +132,56 @@ module.exports = {
           );
         }
         break;
-      case "fetch":
-        {
-          const Role = options.getRole("role", true);
-          const Timestamp = parseInt(Role.createdTimestamp / 1000);
+      case "fetch": {
+        const Role = options.getRole("role", true);
+        const Timestamp = parseInt(Role.createdTimestamp / 1000);
 
-          const Embed = new EmbedBuilder()
-            .setColor(Role.color)
-            .setAuthor({
-              name: member.user.username + "#" + member.user.discriminator,
-              iconURL: member.user.avatarURL(),
-            })
-            .setTitle(`${Role.name} | Info`)
-            .setDescription(
-              `> Name: ${Role.name}\n> ID: ${
-                Role.id
-              }\n> Created: <t:${Timestamp}:D> at <t:${Timestamp}:T> | <t:${Timestamp}:R>\n> Color: ${
-                Role.hexColor || Role.color
-              }\n> Position: ${Role.position || Role.rawPosition}\n> Hoisted: ${
-                Role.hoist ? `${types.formats.yes}` : `${types.formats.no}`
-              }\n> Managed: ${
-                Role.managed ? `${types.formats.yes}` : `${types.formats.no}`
-              }\n> Mentionable: ${
-                Role.mentionable
-                  ? `${types.formats.yes}`
-                  : `${types.formats.no}`
-              }\n\n *The following properties only apply to the bot (${
-                client.user.username
-              }).*\n\n> Editable: ${
-                Role.editable ? `${types.formats.yes}` : `${types.formats.no}`
-              }`
-            );
-
-          const Row = new ActionRowBuilder().setComponents(
-            new ButtonBuilder()
-              .setCustomId(`role.members.${Role.id}`)
-              .setLabel("View Members")
-              .setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder()
-              .setCustomId(`role.perms.${Role.id}`)
-              .setLabel("View Permissions")
-              .setStyle(ButtonStyle.Secondary),
-            new ButtonBuilder()
-              .setCustomId("exit")
-              .setLabel("Exit")
-              .setStyle(ButtonStyle.Danger)
+        const Embed = new EmbedBuilder()
+          .setColor(Role.color)
+          .setAuthor({
+            name: member.user.username + "#" + member.user.discriminator,
+            iconURL: member.user.avatarURL(),
+          })
+          .setTitle(`${Role.name} | Info`)
+          .setDescription(
+            `> Name: ${Role.name}\n> ID: ${
+              Role.id
+            }\n> Created: <t:${Timestamp}:D> at <t:${Timestamp}:T> | <t:${Timestamp}:R>\n> Color: ${
+              Role.hexColor || Role.color
+            }\n> Position: ${Role.position || Role.rawPosition}\n> Hoisted: ${
+              Role.hoist ? `${types.formats.yes}` : `${types.formats.no}`
+            }\n> Managed: ${
+              Role.managed ? `${types.formats.yes}` : `${types.formats.no}`
+            }\n> Mentionable: ${
+              Role.mentionable ? `${types.formats.yes}` : `${types.formats.no}`
+            }\n\n *The following properties only apply to the bot (${
+              client.user.username
+            }).*\n\n> Editable: ${
+              Role.editable ? `${types.formats.yes}` : `${types.formats.no}`
+            }`
           );
 
-          await interaction.reply({ embeds: [Embed], components: [Row] });
-          return client.cache.set(
-            (await interaction.fetchReply()).id,
-            interaction.user.id
-          );
-        }
-        break;
+        const Row = new ActionRowBuilder().setComponents(
+          new ButtonBuilder()
+            .setCustomId(`role.members.${Role.id}`)
+            .setLabel("View Members")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId(`role.perms.${Role.id}`)
+            .setLabel("View Permissions")
+            .setStyle(ButtonStyle.Secondary),
+          new ButtonBuilder()
+            .setCustomId("exit")
+            .setLabel("Exit")
+            .setStyle(ButtonStyle.Danger)
+        );
+
+        await interaction.reply({ embeds: [Embed], components: [Row] });
+        return client.cache.set(
+          (await interaction.fetchReply()).id,
+          interaction.user.id
+        );
+      }
     }
   },
 };

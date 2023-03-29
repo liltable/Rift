@@ -15,7 +15,7 @@ module.exports = {
       ephemeral: true,
       embeds: [
         new EmbedBuilder().setDescription(
-          `> :satellite: Latency: ${client.ws.ping}ms\n> ⌚ Uptime: <t:${Uptime}:T> | <t:${Uptime}:R>`
+          `> :satellite: Latency: ${client.ws.ping}ms\n> ⌚ Uptime: <t:${Uptime}:f> | <t:${Uptime}:R>`
         ),
       ],
     });

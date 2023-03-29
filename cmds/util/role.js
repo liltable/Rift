@@ -146,7 +146,7 @@ module.exports = {
           .setDescription(
             `> Name: ${Role.name}\n> ID: ${
               Role.id
-            }\n> Created: <t:${Timestamp}:D> at <t:${Timestamp}:T> | <t:${Timestamp}:R>\n> Color: ${
+            }\n> Created: <t:${Timestamp}:D> at <t:${Timestamp}:f> | <t:${Timestamp}:R>\n> Color: ${
               Role.hexColor || Role.color
             }\n> Position: ${Role.position || Role.rawPosition}\n> Hoisted: ${
               Role.hoist ? `${types.formats.yes}` : `${types.formats.no}`

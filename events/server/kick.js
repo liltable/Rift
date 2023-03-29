@@ -47,11 +47,11 @@ module.exports = {
       .setDescription(
         `> Member kicked.\n> Member: ${target || `\`Failed to fetch.\``} (${
           target.id
-        })\n> Account Created: <t:${memberTimestamp}:T> | <t:${memberTimestamp}:R>\n> Staff: ${
+        })\n> Account Created: <t:${memberTimestamp}:f> | <t:${memberTimestamp}:R>\n> Staff: ${
           member || `\`Failed to fetch.\``
         } (${
           member.id
-        })\n> Reason: ${reason}\n> Date: <t:${timestamp}:T> | <t:${timestamp}:R>`
+        })\n> Reason: ${reason}\n> Date: <t:${timestamp}:f> | <t:${timestamp}:R>`
       );
 
     const Reply = new EmbedBuilder()

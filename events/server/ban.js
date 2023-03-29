@@ -60,7 +60,7 @@ module.exports = {
           target.id
         })\n> Reason: ${reason}\n> Staff: ${
           member.user || `\`Failed to fetch.\``
-        } (${member.user.id})\n> Date: <t:${Timestamp}:T> | <t:${Timestamp}:R>`
+        } (${member.user.id})\n> Date: <t:${Timestamp}:f> | <t:${Timestamp}:R>`
       );
     const Timestamp = parseInt(interaction.createdTimestamp / 1000);
 
@@ -70,7 +70,7 @@ module.exports = {
       .setDescription(
         `> :no_entry_sign: Banned ${
           target || `\`Unknown\``
-        }\n> Reason: ${reason}\n> Date: <t:${Timestamp}:T> | <t:${Timestamp}:R>`
+        }\n> Reason: ${reason}\n> Date: <t:${Timestamp}:f> | <t:${Timestamp}:R>`
       );
 
     interaction.reply({ embeds: [Reply] });

@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 const icons = require("../../icons/urls");
 const { storage } = require("../../schemas/guild");
-const { Types } = require("../../types/types");
+const { Types, types } = require("../../types/types");
 
 module.exports = {
   name: "interactionCreate",
@@ -38,6 +38,14 @@ module.exports = {
       reason: reason,
       deleteMessageSeconds: delMsgs,
     });
+
+    await types.logs.ban(
+      member,
+      target,
+      reason,
+      guild,
+      parseInt(interaction.createdTimestamp / 1000)
+    );
 
     const Log = new EmbedBuilder()
       .setColor(Colors.Red)

@@ -33,6 +33,10 @@ module.exports = {
       case "toggle": {
         server.logs.enabled = server.logs.enabled ? false : true;
         await server.save();
+
+        if (interaction.message.deletable) {
+          await interaction.message.delete();
+        }
         await interaction.reply({
           embeds: [
             new EmbedBuilder()
@@ -72,8 +76,7 @@ module.exports = {
         );
       }
       case "channel": {
-        const channel = guild.channels.cache.get(args[2]);
-        if (!channel || !args[2]) {
+        if (args[2] === "reset") {
           server.logs.channel = null;
           await server.save();
           return interaction.reply({
@@ -85,8 +88,15 @@ module.exports = {
             ephemeral: true,
           });
         }
-        server.logs.channel = channel.id;
+
+        const channel = guild.channels.cache.get(args[2]);
+
+        server.logs.channel = channel.id || null;
         await server.save();
+
+        if (interaction.message.deletable) {
+          await interaction.message.delete();
+        }
 
         await interaction.reply({
           embeds: [
@@ -103,7 +113,14 @@ module.exports = {
           ],
           components: [
             new ActionRowBuilder().setComponents(
-              new ButtonBuilder().setCustomId(`logs.channel.${null}`)
+              new ButtonBuilder()
+                .setCustomId(`logs.channel.reset`)
+                .setLabel("Revoke")
+                .setStyle(ButtonStyle.Danger),
+              new ButtonBuilder()
+                .setCustomId("exit")
+                .setLabel("Exit")
+                .setStyle(ButtonStyle.Danger)
             ),
           ],
         });

@@ -3,7 +3,6 @@ const {
   ChatInputCommandInteraction,
   Client,
   ApplicationCommandOptionType,
-  Embed,
   Colors,
   ActionRowBuilder,
   ButtonBuilder,
@@ -47,35 +46,34 @@ module.exports = {
     const Sub = options.getSubcommand(true);
     const server = await storage.findOne({ guild: guild.id });
     switch (Sub) {
-      case "toggle":
-        {
-          const Reply = new EmbedBuilder()
-            .setColor(Colors.Red)
-            .setDescription(`Toggle logging by Rift for this server?`)
-            .setAuthor({
-              iconURL: member.user.avatarURL(),
-              name: member.user.username + "#" + member.user.discriminator,
-            })
-            .setThumbnail(`${guild.iconURL()}`);
-          const Row = new ActionRowBuilder().setComponents(
-            new ButtonBuilder()
-              .setCustomId(`logs.toggle`)
-              .setLabel("Confirm")
-              .setStyle(ButtonStyle.Success),
-            new ButtonBuilder()
-              .setCustomId("exit")
-              .setLabel("Cancel")
-              .setStyle(ButtonStyle.Danger)
-          );
+      case "toggle": {
+        const Reply = new EmbedBuilder()
+          .setColor(Colors.Red)
+          .setDescription(`Toggle logging by Rift for this server?`)
+          .setAuthor({
+            iconURL: member.user.avatarURL(),
+            name: member.user.username + "#" + member.user.discriminator,
+          })
+          .setThumbnail(`${guild.iconURL()}`);
+        const Row = new ActionRowBuilder().setComponents(
+          new ButtonBuilder()
+            .setCustomId(`logs.toggle`)
+            .setLabel("Confirm")
+            .setStyle(ButtonStyle.Success),
+          new ButtonBuilder()
+            .setCustomId("exit")
+            .setLabel("Cancel")
+            .setStyle(ButtonStyle.Danger)
+        );
 
-          await interaction.reply({ embeds: [Reply], components: [Row] });
-          return client.cache.set(
-            (await interaction.fetchReply()).id,
-            member.user.id
-          );
-        }
-        break;
+        await interaction.reply({ embeds: [Reply], components: [Row] });
+        return client.cache.set(
+          (await interaction.fetchReply()).id,
+          member.user.id
+        );
+      }
       case "channel": {
+        const channel = options.getChannel("set", true);
         if (!server.logs.enabled)
           return interaction.reply({
             embeds: [
@@ -91,17 +89,15 @@ module.exports = {
         const Reply = new EmbedBuilder()
           .setColor(Colors.Red)
           .setDescription(
-            `> ${
-              server.logs.enabled ? "Disable" : "Enable"
-            } logging by Rift for this server?`
+            `> Set the logging channel for this server by Rift to ${
+              channel || `\`Failed to fetch\``
+            }?`
           )
           .setAuthor({
             iconURL: member.user.avatarURL(),
             name: member.user.username + "#" + member.user.discriminator,
           })
           .setThumbnail(`${guild.iconURL()}`);
-
-        const channel = options.getChannel("set", true);
 
         const Row = new ActionRowBuilder().setComponents(
           new ButtonBuilder()

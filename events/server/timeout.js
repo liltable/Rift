@@ -24,7 +24,7 @@ module.exports = {
         ephemeral: true,
       });
     const args = interaction.customId.split(".");
-    const { member, guild } = interaction;
+    const { guild } = interaction;
     const target = guild.members.cache.get(args[1]);
     const duration = args[3];
     const reason = args[2];
@@ -76,7 +76,7 @@ module.exports = {
           owner.send({
             embeds: [
               new EmbedBuilder().setDescription(
-                `> It seems there has been an error with logging.\n> In the meantime, I've disabled logging and reset the channel for your server (${guild.name}).\n> Please reset this manually or contact support. `
+                `> It seems there has been an error with logging.\n> In the meantime, Rift disabled logging and reset the channel for your server (${guild.name}).\n> Please reset this manually or contact support. `
               ),
             ],
           });

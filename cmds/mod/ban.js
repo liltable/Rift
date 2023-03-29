@@ -8,6 +8,7 @@ const {
   ButtonBuilder,
   ButtonStyle,
 } = require("discord.js");
+const { types } = require("../../types/types");
 
 module.exports = {
   name: "ban",
@@ -48,7 +49,7 @@ module.exports = {
     const delMsgs = options.getBoolean("messages") ? "604800" : "0";
 
     if (!target.bannable) {
-      interaction.reply({
+      return interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setColor(Colors.Red)

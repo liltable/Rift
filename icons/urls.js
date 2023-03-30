@@ -5,4 +5,4 @@ const icons = {
   create:
     "https://media.discordapp.net/attachments/846871448295047188/872140368093786152/eventCreate.png",
 };
-module.exports = icons;
+module.exports = { icons };

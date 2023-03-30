@@ -6,7 +6,7 @@ const {
 } = require("discord.js");
 const icons = require("../../icons/urls");
 const { storage } = require("../../schemas/guild");
-const { Types, types } = require("../../types/types");
+const { logs } = require("../../types/logs");
 
 module.exports = {
   name: "interactionCreate",
@@ -39,7 +39,7 @@ module.exports = {
       deleteMessageSeconds: delMsgs,
     });
 
-    await types.logs.ban(
+    await logs.ban(
       member,
       target,
       reason,

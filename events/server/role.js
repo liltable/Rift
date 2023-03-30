@@ -8,6 +8,7 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const ms = require("ms");
+const { logs } = require("../../types/logs");
 
 module.exports = {
   name: "interactionCreate",
@@ -50,6 +51,15 @@ module.exports = {
             await target.roles.add(role);
             nowHas = true;
           }
+
+          await logs.role(
+            role,
+            target,
+            reason,
+            parseInt(interaction.createdTimestamp / 1000),
+            nowHas,
+            member
+          );
 
           const Embed = new EmbedBuilder()
             .setColor(nowHas ? Colors.Green : Colors.Red)

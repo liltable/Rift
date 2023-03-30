@@ -25,9 +25,11 @@ const logs = {
       .setDescription(
         `> Guild member banned! ${target}\n\n📁 Target:\n Full Username: ${
           target.user.username + "#" + target.user.discriminator
-        }\n ID: ${
-          target.user.id
-        }\n Reason: ${reason}\nDate Banned: <t:${timestamp}:f> | <t:${timestamp}:R>\n Staff: ${staff}`
+        }\n ID: ${target.user.id}\n Account Created: <t:${parseInt(
+          target.user.createdTimestamp / 1000
+        )}:f> | <t:${parseInt(
+          target.user.createdTimestamp / 1000
+        )}:R>\n Reason: ${reason}\nDate Banned: <t:${timestamp}:f> | <t:${timestamp}:R>\n Staff: ${staff}`
       );
 
     try {
@@ -63,9 +65,11 @@ const logs = {
       .setDescription(
         `> Guild member kicked! ${target}\n\n📁 Target:\n Full Username: ${
           target.user.username + "#" + target.user.discriminator
-        }\n ID: ${
-          target.user.id
-        }\n Reason: ${reason}\nDate Kicked: <t:${timestamp}:f> | <t:${timestamp}:R>\n Staff: ${staff}`
+        }\n ID: ${target.user.id}\n Account Created: <t:${parseInt(
+          target.user.createdTimestamp / 1000
+        )}:f> | <t:${parseInt(
+          target.user.createdTimestamp / 1000
+        )}:R> \nReason: ${reason}\nDate Kicked: <t:${timestamp}:f> | <t:${timestamp}:R>\n Staff: ${staff}`
       );
 
     try {

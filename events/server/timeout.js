@@ -1,6 +1,7 @@
 const { ButtonInteraction, Client, EmbedBuilder } = require("discord.js");
 const { storage } = require("../../schemas/guild");
 const ms = require("ms");
+const { logs } = require("../../types/logs");
 
 module.exports = {
   name: "interactionCreate",
@@ -35,6 +36,15 @@ module.exports = {
     await target.disableCommunicationUntil(ms(duration), {
       reason: reason,
     });
+
+    await logs.timeout(
+      target,
+      interaction.member,
+      reason,
+      guild,
+      parseInt(interaction.createdTimestamp / 1000),
+      duration
+    );
 
     const server = await storage.findOne({ guild: guild.id });
     if (!server) {

@@ -210,7 +210,7 @@ const logs = {
     try {
       guild.channels.cache
         .get(server.logs.channel)
-        .send({ embeds: [Embed], attachment: attachment });
+        .send({ embeds: [Embed], files: [attachment] });
     } catch (err) {
       console.log(
         `Failed to log the nuke of channel ${newChannel.name} in guild ${guild.name}.`

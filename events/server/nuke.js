@@ -7,7 +7,6 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  time,
 } = require("discord.js");
 const { types } = require("../../types/types");
 const { logs } = require("../../types/logs");
@@ -36,11 +35,12 @@ module.exports = {
       });
 
     const args = interaction.customId.split(".");
-    const channel = client.channels.cache.get(args[1]);
     const reason = args[2];
-    const staff = client.guilds.cache
-      .get(channel.guildId)
-      .members.cache.get(args[3]);
+    const guild = client.guilds.cache.get(args[4]);
+    const staff = guild.members.cache.get(args[3]);
+    const channel = await guild.channels.fetch(args[1]);
+
+    if (!channel || !args || !guild) return;
 
     const timestamp = parseInt(interaction.createdTimestamp / 1000);
 
@@ -48,15 +48,28 @@ module.exports = {
       limit: -1,
       poweredBy: false,
       saveImages: true,
+      filename: `${channel.name}-transcript.html  `,
     });
     const newChannel = await channel.clone();
-    if (channel.deletable) {
-      await channel.delete();
-    }
+    channel.delete();
+    newChannel.setPosition(channel.position, { reason: reason });
+    newChannel.send({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(Colors.Orange)
+          .setTitle("Rift | Notice")
+          .setDescription(
+            `> **This channel was nuked.**\n> All messages prior to the nuke were logged and deleted.\n> Staff: ${
+              staff ||
+              `\`Failed to fetch.\`\n> Date: <t:${timestamp}:f> | <t:${timestamp}:R>\n> Reason: ${reason}`
+            } `
+          ),
+      ],
+    });
 
-    await logs.nuke(channel, newChannel, reason, staff, timestamp, Attachment);
+    logs.nuke(channel, newChannel, reason, staff, timestamp, Attachment);
 
-    return interaction.reply({
+    await interaction.reply({
       embeds: [
         new EmbedBuilder()
           .setColor(Colors.Green)

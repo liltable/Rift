@@ -53,13 +53,15 @@ module.exports = {
 
     const Row = new ActionRowBuilder().setComponents(
       new ButtonBuilder()
-        .setCustomId(`nuke.${channel.id}.${reason}.${member.user.id}`)
+        .setCustomId(
+          `nuke.${channel.id}.${reason}.${member.user.id}.${interaction.guild.id}`
+        )
         .setLabel("Confirm")
         .setStyle(ButtonStyle.Success),
       new ButtonBuilder()
         .setLabel("Cancel")
         .setStyle(ButtonStyle.Danger)
-        .setStyle("exit")
+        .setCustomId("exit")
     );
 
     const Reply = new EmbedBuilder()

@@ -112,7 +112,7 @@ const logs = {
         iconURL: target.user.avatarURL(),
       })
       .setDescription(
-        `> Guild member muted! ${target}\n\n📁4 Target:\n Full Username: ${
+        `> Guild member muted! ${target}\n\n📁 Target:\n Full Username: ${
           target.user.username + "#" + target.user.discriminator
         }\n ID: ${
           target.user.id

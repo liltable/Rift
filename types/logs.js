@@ -1,5 +1,14 @@
-const { Role, GuildMember, Colors } = require("discord.js");
+const {
+  Role,
+  GuildMember,
+  Colors,
+  Attachment,
+  Guild,
+  EmbedBuilder,
+  ActionRowBuilder,
+} = require("discord.js");
 const { icons } = require("../icons/urls");
+const { storage } = require("../schemas/guild");
 
 const logs = {
   /**
@@ -158,6 +167,54 @@ const logs = {
         `Failed to log the role ${nowHas ? "addition" : "removal"} of ${
           target.user.username + "#" + target.user.discriminator
         } in guild ${guild.name}.\n Role: ${role.name}`
+      );
+    }
+  },
+  /**
+   *
+   * @param {import("discord.js").GuildTextBasedChannel} channel
+   * @param {import("discord.js").GuildTextBasedChannel} newChannel
+   * @param {String} reason
+   * @param {GuildMember} staff
+   * @param {Number} timestamp
+   * @param {Attachment} attachment
+   */
+  nuke: async function (
+    channel,
+    newChannel,
+    reason,
+    staff,
+    timestamp,
+    attachment
+  ) {
+    const server = await storage.findOne({ guild: staff.guild.id });
+    if (!server.logs.enabled) return;
+    const { guild } = staff;
+    const Embed = new EmbedBuilder()
+      .setColor(Colors.DarkRed)
+      .setThumbnail(`${icons.delete}`)
+      .setTitle(`Rift | Logs`)
+      .setDescription(
+        `> Channel nuked! ${newChannel}\n\n> Old Channel ID: ${
+          channel.id
+        }\n> Channel ID: ${
+          newChannel.id
+        }\n> Reason: ${reason}\n> Staff: ${staff}\n> ID: ${
+          staff.id
+        }\n> Account Created: <t:${parseInt(
+          staff.user.createdTimestamp / 1000
+        )}:f> | <t:${parseInt(
+          staff.user.createdTimestamp / 1000
+        )}:R>\n> Date Nuked: <t:${timestamp}:f> | <t:${timestamp}:R>\n\n> *Nuking a channel is dangerous. Important messages could be lost. Therefore, an HTML document containing all of the messages has been saved below. If this message is deleted, this transcript will be lost forever.*`
+      );
+
+    try {
+      guild.channels.cache
+        .get(server.logs.channel)
+        .send({ embeds: [Embed], attachment: attachment });
+    } catch (err) {
+      console.log(
+        `Failed to log the nuke of channel ${newChannel.name} in guild ${guild.name}.`
       );
     }
   },

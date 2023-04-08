@@ -25,6 +25,17 @@ module.exports = {
   async execute(interaction, client) {
     if (!interaction.isButton()) return;
     if (!interaction.customId.startsWith("logs")) return;
+    const cache = await client.cache.get(interaction.message.id);
+    if (!cache)
+      return interaction.reply({
+        content: "This button menu has expired.",
+        ephemeral: true,
+      });
+    if (cache !== interaction.user.id)
+      return interaction.reply({
+        content: "This isn't your button menu.",
+        ephemeral: true,
+      });
     const args = interaction.customId.split(".");
     const { member, guild } = interaction;
     const type = args[1];

@@ -9,6 +9,19 @@ const storage = model(
       channel: { type: String, required: false },
       events: Array,
     },
+    greeting: {
+      enabled: { type: Boolean, default: false, enum: [false, true] },
+      style: {
+        type: String,
+        required: true,
+        default: "dm",
+        enum: ["channel", "dm"],
+      },
+      channel: {
+        type: String,
+        default: null,
+      },
+    },
   })
 );
 

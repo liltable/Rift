@@ -25,7 +25,7 @@ const logs = {
     const Embed = new EmbedBuilder()
       .setColor(Colors.Red)
       .setTitle(`Rift | Logs`)
-      .setThumbnail(icons.delete)
+      .setThumbnail(icons.leave)
       .setAuthor({
         name: target.user.username + "#" + target.user.discriminator,
         iconURL: target.user.avatarURL(),
@@ -65,7 +65,7 @@ const logs = {
     const Embed = new EmbedBuilder()
       .setColor(Colors.Red)
       .setTitle(`Rift | Logs`)
-      .setThumbnail(icons.delete)
+      .setThumbnail(icons.leave)
       .setAuthor({
         name: target.user.username + "#" + target.user.discriminator,
         iconURL: target.user.avatarURL(),
@@ -106,7 +106,7 @@ const logs = {
     const Embed = new EmbedBuilder()
       .setColor(Colors.Red)
       .setTitle(`Rift | Logs`)
-      .setThumbnail(icons.delete)
+      .setThumbnail(icons.leave)
       .setAuthor({
         name: target.user.username + "#" + target.user.discriminator,
         iconURL: target.user.avatarURL(),
@@ -145,7 +145,7 @@ const logs = {
     const Embed = new EmbedBuilder()
       .setColor(nowHas ? Colors.Green : Colors.Red)
       .setTitle(`Rift | Logs`)
-      .setThumbnail(nowHas ? icons.create : icons.delete)
+      .setThumbnail(nowHas ? icons.roleAdd : icons.roleRemove)
       .setAuthor({
         name: target.user.username + "#" + target.user.discriminator,
         iconURL: target.user.avatarURL(),
@@ -191,7 +191,7 @@ const logs = {
     const { guild } = staff;
     const Embed = new EmbedBuilder()
       .setColor(Colors.DarkRed)
-      .setThumbnail(`${icons.delete}`)
+      .setThumbnail(`${icons.nuke}`)
       .setTitle(`Rift | Logs`)
       .setDescription(
         `> Channel nuked! ${newChannel}\n\n> Old Channel ID: ${

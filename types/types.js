@@ -1,8 +1,3 @@
-const { EmbedBuilder, time } = require("@discordjs/builders");
-const { GuildMember, Guild, Colors } = require("discord.js");
-const icons = require("../icons/urls");
-const { storage } = require("../schemas/guild");
-
 const types = {
   logs: {
     channel: "channel",

@@ -67,6 +67,10 @@ module.exports = {
       ],
     });
 
+    if (interaction.message.deletable) {
+      interaction.message.delete();
+    }
+
     logs.nuke(channel, newChannel, reason, staff, timestamp, Attachment);
 
     await interaction.reply({

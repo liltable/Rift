@@ -20,7 +20,7 @@ module.exports = {
   async execute(interaction, client) {
     if (!interaction.isButton()) return;
     if (!interaction.customId.startsWith("kick")) return;
-    const cache = client.cache.get(interaction.message.id);
+    const cache = await client.cache.get(interaction.message.id);
     if (!cache)
       return interaction.reply({
         content: "This button menu has expired.",

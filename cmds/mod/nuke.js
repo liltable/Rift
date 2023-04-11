@@ -10,6 +10,7 @@ const {
 } = require("discord.js");
 const { types } = require("../../types/types");
 const { icons } = require("../../icons/urls");
+const { storage } = require("../../schemas/guild");
 
 module.exports = {
   name: "nuke",
@@ -47,6 +48,24 @@ module.exports = {
             .setDescription(
               `> ${types.formats.no} Missing permissions: \`${this.permission}\``
             ),
+        ],
+        ephemeral: true,
+      });
+
+    const server = await storage.findOne({ guild: interaction.guild.id });
+    if (server.logs.channel === channel.id)
+      return interaction.reply({
+        embeds: [
+          new EmbedBuilder()
+            .setColor(Colors.Red)
+            .setDescription(`> You can't nuke the set logging channel!`)
+            .setAuthor({
+              name:
+                interaction.user.username +
+                "#" +
+                interaction.user.discriminator,
+              iconURL: interaction.user.avatarURL(),
+            }),
         ],
         ephemeral: true,
       });

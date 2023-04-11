@@ -37,7 +37,7 @@ module.exports = {
 
     const args = interaction.customId.split(".");
     const reason = args[2];
-    const guild = client.guilds.cache.get(args[4]);
+    const guild = await client.guilds.fetch(args[4]);
     const staff = guild.members.cache.get(args[3]);
     const channel = await guild.channels.fetch(args[1]);
 

@@ -150,7 +150,7 @@ module.exports = {
       });
     }
 
-    interaction.reply({
+    await interaction.reply({
       embeds: [Embed],
       components: [
         new ActionRowBuilder().setComponents(

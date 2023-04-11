@@ -6,7 +6,6 @@ const {
 const {
   ButtonInteraction,
   Client,
-  Embed,
   Colors,
   ButtonStyle,
 } = require("discord.js");
@@ -56,9 +55,7 @@ module.exports = {
                 iconURL: member.user.avatarURL(),
                 name: member.user.username + "#" + member.user.discriminator,
               })
-              .setThumbnail(
-                `${server.logs.enabled ? icons.create : icons.delete}`
-              )
+              .setThumbnail(server.logs.enabled ? icons.create : icons.delete)
               .setDescription(
                 `> ${
                   server.logs.enabled ? types.formats.yes : types.formats.no
@@ -120,7 +117,7 @@ module.exports = {
                 name: member.user.username + "#" + member.user.discriminator,
                 iconURL: member.user.avatarURL(),
               })
-              .setThumbnail(`${icons.create}`),
+              .setThumbnail(icons.create),
           ],
           components: [
             new ActionRowBuilder().setComponents(

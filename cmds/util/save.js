@@ -4,6 +4,9 @@ const {
   ApplicationCommandOptionType,
   EmbedBuilder,
   Colors,
+  ButtonBuilder,
+  ButtonStyle,
+  ActionRowBuilder,
 } = require("discord.js");
 const { icons } = require("../../icons/urls");
 const { logs } = require("../../types/logs");
@@ -45,7 +48,7 @@ module.exports = {
     await interaction.reply({
       embeds: [
         new EmbedBuilder()
-          .setColor(Colors.Red)
+          .setColor(Colors.Green)
           .setTitle("Rift | Save")
           .setThumbnail(icons.create)
           .setAuthor({
@@ -57,15 +60,18 @@ module.exports = {
           ),
       ],
       files: [Attachment],
+      components: [
+        new ActionRowBuilder().setComponents(
+          new ButtonBuilder()
+            .setCustomId("exit")
+            .setLabel("Exit")
+            .setStyle(ButtonStyle.Danger)
+        ),
+      ],
     });
 
-    return logs.save(
-      Attachment,
-      Reason,
-      member,
-      channel,
-      Amount,
-      parseInt(interaction.createdTimestamp / 1000)
-    );
+    const Timestmap = parseInt(interaction.createdTimestamp / 1000);
+
+    await logs.save(Attachment, Reason, member, channel, Timestmap, Amount);
   },
 };

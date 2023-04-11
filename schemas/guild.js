@@ -7,7 +7,6 @@ const storage = model(
     logs: {
       enabled: { type: Boolean, default: false, enum: [false, true] },
       channel: { type: String, required: false },
-      events: Array,
     },
     greeting: {
       enabled: { type: Boolean, default: false, enum: [false, true] },

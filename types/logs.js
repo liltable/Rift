@@ -260,7 +260,7 @@ const logs = {
     try {
       member.guild.channels.cache
         .get(server.logs.channel)
-        .send({ embeds: [Embed], files: [Attachment] });
+        .send({ embeds: [Embed], files: [attachment] });
     } catch (err) {
       console.log(
         `Failed to log the save of channel ${channel.name} by guild member ${

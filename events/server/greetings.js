@@ -65,6 +65,34 @@ module.exports = {
         break;
       case "style":
         {
+          if (server.greeting.style === "dm") {
+            server.greeting.style = "channel";
+            await server.save();
+          } else {
+            server.greeting.style = "dm";
+            await server.save();
+          }
+
+          await interaction.reply({
+            embeds: [
+              new EmbedBuilder()
+                .setColor(Colors.Green)
+                .setThumbnail(icons.create)
+                .setAuthor({
+                  name:
+                    interaction.user.username +
+                    "#" +
+                    interaction.user.discriminator,
+                  iconURL: interaction.user.avatarURL(),
+                })
+                .setTitle("Rift | Notice")
+                .setDescription(
+                  `> Successfully set the server's greeting style to: **${server.greeting.style
+                    .replace("dm", "Greet via DM")
+                    .replace("channel", "Greet via server channel")}**.`
+                ),
+            ],
+          });
         }
         break;
     }

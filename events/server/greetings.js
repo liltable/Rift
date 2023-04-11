@@ -1,4 +1,11 @@
-const { ButtonInteraction, Client } = require("discord.js");
+const {
+  ButtonInteraction,
+  Client,
+  EmbedBuilder,
+  Colors,
+} = require("discord.js");
+const { storage } = require("../../schemas/guild");
+const { icons } = require("../../icons/urls");
 
 module.exports = {
   name: "interactionCreate",
@@ -24,11 +31,36 @@ module.exports = {
       });
 
     const args = interaction.customId.split(".");
+    const guild = client.guilds.cache.get(args[2]);
+    const server = await storage.findOne({ guild: guild.id });
 
     const type = args[1];
     switch (type) {
       case "toggle":
         {
+          server.logs.enabled = server.logs.enabled ? false : true;
+          await server.save();
+
+          return interaction.reply({
+            embeds: [
+              new EmbedBuilder()
+                .setColor(server.logs.enabled ? Colors.Green : Colors.Red)
+                .setAuthor({
+                  iconURL: interaction.user.avatarURL(),
+                  name:
+                    interaction.user.username +
+                    "#" +
+                    interaction.user.discriminator,
+                })
+                .setTitle("Rift | Notice")
+                .setThumbnail(icons.edit)
+                .setDescription(
+                  `> ${
+                    server.logs.enabled ? "Enabled" : "Disabled"
+                  } greeting for this server.`
+                ),
+            ],
+          });
         }
         break;
       case "style":

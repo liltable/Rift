@@ -10,6 +10,7 @@ const {
 } = require("discord.js");
 const { types } = require("../../types/types");
 const { logs } = require("../../types/logs");
+const { icons } = require("../../icons/urls");
 
 module.exports = {
   name: "interactionCreate",
@@ -58,6 +59,7 @@ module.exports = {
         new EmbedBuilder()
           .setColor(Colors.Orange)
           .setTitle("Rift | Notice")
+          .setThumbnail(icons.nuke)
           .setDescription(
             `> **This channel was nuked.**\n> All messages prior to the nuke were logged and deleted.\n> Staff: ${
               staff ||

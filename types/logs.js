@@ -204,7 +204,7 @@ const logs = {
           staff.user.createdTimestamp / 1000
         )}:f> | <t:${parseInt(
           staff.user.createdTimestamp / 1000
-        )}:R>\n> Date Nuked: <t:${timestamp}:f> | <t:${timestamp}:R>\n\n> *Nuking a channel is dangerous. Important messages could be lost. Therefore, an HTML document containing all of the messages has been saved below. If this message is deleted, this transcript will be lost forever.*`
+        )}:R>\n> Date Nuked: <t:${timestamp}:f> | <t:${timestamp}:R>\n\n> *Nuking a channel is dangerous. Important messages could be lost. Therefore, an HTML document containing all of the messages has been saved above. If this message is deleted, this transcript will be lost forever.*`
       );
 
     try {
@@ -214,6 +214,58 @@ const logs = {
     } catch (err) {
       console.log(
         `Failed to log the nuke of channel ${newChannel.name} in guild ${guild.name}.`
+      );
+    }
+  },
+  /**
+   *
+   * @param {Attachment} attachment
+   * @param {String} reason
+   * @param {GuildMember} member
+   * @param {import("discord.js").TextBasedChannel} channel
+   * @param {Number} timestamp
+   * @param {Number} amount
+   */
+  save: async function (
+    attachment,
+    reason,
+    member,
+    channel,
+    timestamp,
+    amount
+  ) {
+    const server = await storage.findOne({ guild: member.guild.id });
+    if (!server.logs.enabled) return;
+
+    const Embed = new EmbedBuilder()
+      .setColor(Colors.Green)
+      .setTitle("Rift | Logs")
+      .setAuthor({
+        name: member.user.username + "#" + member.user.discriminator,
+        iconURL: member.user.avatarURL(),
+      })
+      .setThumbnail(icons.create)
+      .setDescription(
+        `Channel transcript saved! ${channel}\n\n> Channel: ${channel} (${
+          channel.id
+        })\n> Amount: ${amount} message(s)\n> Reason: ${reason}\n> Date Saved: <t:${timestamp}:f> | <t:${timestamp}:R>\n> Member: ${member} (${
+          member.user.id
+        })\n> Date Joined: <t:${parseInt(
+          member.user.createdTimestamp / 1000
+        )}:f> | <t:${parseInt(
+          member.user.createdTimestamp / 1000
+        )}:R>\n\n*Since this transcript may contain sensitive messages, we saved a copy in the logs. If this message is deleted, the transcript is lost forever.*`
+      );
+
+    try {
+      member.guild.channels.cache
+        .get(server.logs.channel)
+        .send({ embeds: [Embed], files: [Attachment] });
+    } catch (err) {
+      console.log(
+        `Failed to log the save of channel ${channel.name} by guild member ${
+          member.user.username + "#" + member.user.discriminator
+        } in guild ${member.guild.name}.`
       );
     }
   },

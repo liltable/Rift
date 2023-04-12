@@ -19,6 +19,7 @@ module.exports = {
    *
    * @param {ButtonInteraction} interaction
    * @param {Client} client
+   *
    */
   async execute(interaction, client) {
     if (!interaction.isButton()) return;

@@ -26,11 +26,14 @@ module.exports = {
     if (server.greeting.style === "dm") {
       GreetingStyle = "by **DM**";
     } else {
-      GreetingStyle = `by **server channel**\n> Channel: <#${server.greeting.channel}>`;
+      GreetingStyle = `by **server channel**\n> Channel: ${`<#${server.greeting.channel}>`.replace(
+        "<#null>",
+        "None set"
+      )}`;
     }
 
     const Menu = new EmbedBuilder()
-      .setColor(Colors.Blurple)
+      .setColor(Colors.Grey)
       .setThumbnail(icons.greetingsMenu)
       .setTitle("Rift | Greetings")
       .setAuthor({
@@ -54,6 +57,11 @@ module.exports = {
         .setLabel("Switch Greeting Style")
         .setStyle(ButtonStyle.Secondary)
         .setCustomId(`greetings.style.${interaction.guild.id}`),
+      new ButtonBuilder()
+        .setLabel("Set Greeting Channel")
+        .setCustomId(`greetings.channel.${interaction.user.id}`)
+        .setDisabled(server.greeting.style === "dm" ? true : false)
+        .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId("exit")
         .setLabel("Exit")

@@ -14,6 +14,7 @@ const icons = {
     "https://cdn.discordapp.com/attachments/1032093458556522496/1094040441931964466/role_add.jpeg",
   greetingsMenu:
     "https://cdn.discordapp.com/attachments/1032093458556522496/1094042674933272728/greetingsMenu.jpeg",
-  logs: "https://i.ibb.co/B2pz8fW/logs.jpg", //Need to change this later.
+  logs: "https://cdn.discordapp.com/attachments/1032093458556522496/1102265016662638722/logs.png",
+  help: "https://cdn.discordapp.com/attachments/1032093458556522496/1102269117697888319/help.jpeg",
 };
 module.exports = { icons };

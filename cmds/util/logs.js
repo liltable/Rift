@@ -158,7 +158,17 @@ module.exports = {
             }`
           );
 
-        return interaction.reply({ embeds: [Embed] });
+        return interaction.reply({
+          embeds: [Embed],
+          components: [
+            new ActionRowBuilder()["setComponents"](
+              new ButtonBuilder()
+                ["setCustomId"]("exit")
+                ["setLabel"]("Exit")
+                ["setStyle"](ButtonStyle["Danger"])
+            ),
+          ],
+        });
       }
     }
   },

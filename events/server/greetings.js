@@ -6,6 +6,9 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } = require("discord.js");
 const { storage } = require("../../schemas/guild");
 const { icons } = require("../../icons/urls");
@@ -35,7 +38,7 @@ module.exports = {
       });
 
     const args = interaction.customId.split(".");
-    const guild = client.guilds.cache.get(args[2]);
+    const guild = client.guilds.cache.get(args[2]) || interaction.guild;
     const server = await storage.findOne({ guild: guild.id });
 
     let GreetingStyle = null;
@@ -52,8 +55,10 @@ module.exports = {
     switch (type) {
       case "toggle":
         {
-          server.logs.enabled = server.logs.enabled ? false : true;
+          const Now = server.greeting.enabled;
+          server.greeting.enabled = Now ? false : true;
           await server.save();
+          console.log(server.greeting.enabled.toString());
 
           await interaction.reply({
             embeds: [
@@ -221,6 +226,75 @@ module.exports = {
           );
         }
         break;
+      case "channel": {
+        const Modal = new ModalBuilder()
+          .setCustomId(`greetings.modal`)
+          .setTitle("Rift | Set Greetings Channel")
+          .setComponents(
+            new ActionRowBuilder().setComponents(
+              new TextInputBuilder()
+                .setCustomId(`greetings.modal.channel`)
+                .setLabel("Input the channel ID:")
+                .setPlaceholder("Channel ID's are 20-25 digits in length.")
+                .setMinLength(20)
+                .setMaxLength(25)
+                .setRequired(true)
+                .setStyle(TextInputStyle.Short)
+            )
+          );
+
+        await interaction.showModal(Modal);
+
+        await interaction
+          .awaitModalSubmit({
+            filter: (interaction) =>
+              interaction.isModalSubmit() &&
+              interaction.customId === "greetings.modal",
+            time: "15_000",
+          })
+          .then(async (int) => {
+            const ID = int.fields.getTextInputValue("greetings.modal.channel");
+
+            const Channel = int.guild.channels.cache.get(ID);
+
+            if (!Channel)
+              return int.reply({
+                embeds: [
+                  new EmbedBuilder()
+                    .setColor(Colors.Red)
+                    .setDescription(`> :no_entry_sign: Unknown/Lost channel`),
+                ],
+                ephemeral: true,
+              });
+            else {
+              server.greeting.channel = ID;
+              await server.save();
+              return int.reply({
+                embeds: [
+                  new EmbedBuilder()
+                    .setColor(Colors.Green)
+                    .setTitle("Rift | Greetings")
+                    .setAuthor({
+                      iconURL: int.user.avatarURL(),
+                      name: int.user.username + "#" + int.user.discriminator,
+                    })
+                    .setThumbnail(icons.create)
+                    .setDescription(
+                      `> :white_check_mark: Successfully set this guild's greeting channel to ${Channel} (${ID}).`
+                    ),
+                ],
+                components: [
+                  new ActionRowBuilder().setComponents(
+                    new ButtonBuilder()
+                      .setCustomId("exit")
+                      .setLabel("Exit")
+                      .setStyle(ButtonStyle.Danger)
+                  ),
+                ],
+              });
+            }
+          });
+      }
     }
   },
 };

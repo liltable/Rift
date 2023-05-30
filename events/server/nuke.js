@@ -46,8 +46,8 @@ module.exports = {
 
     const timestamp = parseInt(interaction.createdTimestamp / 1000);
 
-    const Attachment = await createTranscript(channel, {
-      limit: -1,
+    const Attachment = createTranscript(channel, {
+      limit: 300,
       poweredBy: false,
       saveImages: true,
       filename: `${channel.name}-transcript.html  `,
@@ -62,7 +62,7 @@ module.exports = {
           .setTitle("Rift | Notice")
           .setThumbnail(icons.nuke)
           .setDescription(
-            `> **This channel was nuked.**\n> All messages prior to the nuke were logged and deleted.\n> Staff: ${
+            `> **This channel was nuked.**\n> The past 300 messages prior to the nuke were logged.\n> Staff: ${
               staff ||
               `\`Failed to fetch.\`\n> Date: <t:${timestamp}:f> | <t:${timestamp}:R>\n> Reason: ${reason}`
             } `
@@ -70,13 +70,9 @@ module.exports = {
       ],
     });
 
-    if (interaction.message.deletable) {
-      interaction.message.delete();
-    }
-
     logs.nuke(channel, newChannel, reason, staff, timestamp, Attachment);
 
-    await interaction.reply({
+    interaction.reply({
       embeds: [
         new EmbedBuilder()
           .setColor(Colors.Green)
@@ -93,5 +89,9 @@ module.exports = {
         ),
       ],
     });
+
+    if (interaction.message.deletable) {
+      interaction.message.delete();
+    }
   },
 };

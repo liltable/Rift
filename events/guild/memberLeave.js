@@ -10,20 +10,23 @@ module.exports = {
    * @param {Client} client
    */
   async execute(member, client) {
-    const { guild } = member;
-    const server = await storage.findOne({ guild: guild.id });
-    if (!server.greeting.enabled) return;
-    const { style } = server.greeting;
+    return;
 
-    switch (style) {
-      case "dm":
-        {
-        }
-        break;
-      case "channel":
-        {
-        }
-        break;
-    }
+    //TODO: Finish this as well.
+    // const { guild } = member;
+    // const server = await storage.findOne({ guild: guild.id });
+    // if (!server.greeting.enabled) return;
+    // const { style } = server.greeting;
+
+    // switch (style) {
+    //   case "dm":
+    //     {
+    //     }
+    //     break;
+    //   case "channel":
+    //     {
+    //     }
+    //     break;
+    // }
   },
 };

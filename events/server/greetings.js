@@ -330,10 +330,50 @@ module.exports = {
                 interaction.customId === "greetings.message.modal",
               time: ms("15s"),
             })
-            .then(async (int) => {});
-          //TODO: Finish this.
+            .then(async (int) => {
+              const Message = int.fields.getTextInputValue(
+                "greetings.message.modal.content"
+              );
+
+              server.greeting.message = Message;
+              await server.save();
+
+              return int.reply({
+                embeds: [
+                  new EmbedBuilder()
+                    .setColor(Colors.Green)
+                    .setTitle("Rift | Greetings")
+                    .setAuthor({
+                      name: int.user.username + "#" + int.user.discriminator,
+                      iconURL: int.user.avatarURL(),
+                    })
+                    .setThumbnail(icons.edit)
+                    .setDescription(
+                      `:white_check_mark: Successfully set the greeting message for this guild.`
+                    )
+                    .setFields({
+                      name: "Message:",
+                      value: `> ${Message}`,
+                    }),
+                ],
+                components: [
+                  new ActionRowBuilder().setComponents(
+                    new ButtonBuilder()
+                      .setCustomId("greetings.message")
+                      .setLabel("Reset")
+                      .setStyle(ButtonStyle.Danger),
+                    new ButtonBuilder()
+                      .setCustomId("exit")
+                      .setLabel("Exit")
+                      .setStyle(ButtonStyle.Danger)
+                  ),
+                ],
+              });
+            });
         }
         break;
+      case "view": {
+      }
     }
   },
 };

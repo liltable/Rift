@@ -61,6 +61,16 @@ module.exports = {
         .setLabel("Set Greeting Channel")
         .setCustomId(`greetings.channel.${interaction.user.id}`)
         .setDisabled(server.greeting.style === "dm" ? true : false)
+        .setStyle(ButtonStyle.Secondary)
+    );
+    const Row2 = new ActionRowBuilder().setComponents(
+      new ButtonBuilder()
+        .setCustomId("greetings.message")
+        .setLabel("Set Greeting Message")
+        .setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder()
+        .setCustomId("greetings.view")
+        .setLabel("View Greeting Message")
         .setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId("exit")
@@ -68,7 +78,7 @@ module.exports = {
         .setStyle(ButtonStyle.Danger)
     );
 
-    await interaction.reply({ embeds: [Menu], components: [Row] });
+    await interaction.reply({ embeds: [Menu], components: [Row, Row2] });
 
     return client.cache.set(
       (await interaction.fetchReply()).id,

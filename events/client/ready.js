@@ -1,4 +1,4 @@
-const { Client } = require("discord.js");
+const { Client, ActivityType } = require("discord.js");
 
 module.exports = {
   name: "ready",
@@ -14,5 +14,7 @@ module.exports = {
         client.user.username + "#" + client.user.discriminator
       }\nID: ${client.user.id}`
     );
+
+    client.user.setActivity("/help", { type: ActivityType.Listening });
   },
 };

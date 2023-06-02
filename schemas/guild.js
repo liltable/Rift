@@ -20,6 +20,9 @@ const storage = model(
         type: String,
         default: null,
       },
+      message: {
+        type: String,
+      },
     },
   })
 );

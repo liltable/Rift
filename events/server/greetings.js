@@ -64,7 +64,7 @@ module.exports = {
           await interaction.reply({
             embeds: [
               new EmbedBuilder()
-                .setColor(server.logs.enabled ? Colors.Green : Colors.Red)
+                .setColor(server.logs.enabled ? Colors.Red : Colors.Green)
                 .setAuthor({
                   iconURL: interaction.user.avatarURL(),
                   name:
@@ -76,7 +76,7 @@ module.exports = {
                 .setThumbnail(icons.edit)
                 .setDescription(
                   `> ${
-                    server.logs.enabled ? "Enabled" : "Disabled"
+                    server.logs.enabled ? "Disabled" : "Enabled"
                   } greeting for this server.`
                 ),
             ],
@@ -123,6 +123,16 @@ module.exports = {
                     .setLabel("Set Greeting Channel")
                     .setCustomId(`greetings.channel.${interaction.user.id}`)
                     .setDisabled(server.greeting.style === "dm" ? true : false)
+                    .setStyle(ButtonStyle.Secondary)
+                ),
+                new ActionRowBuilder().setComponents(
+                  new ButtonBuilder()
+                    .setCustomId("greetings.message")
+                    .setLabel("Set Greeting Message")
+                    .setStyle(ButtonStyle.Secondary),
+                  new ButtonBuilder()
+                    .setCustomId("greetings.view")
+                    .setLabel("View Greeting Message")
                     .setStyle(ButtonStyle.Secondary),
                   new ButtonBuilder()
                     .setCustomId("exit")
@@ -373,6 +383,35 @@ module.exports = {
         }
         break;
       case "view": {
+        const Message = server.greeting.message;
+
+        return interaction.reply({
+          embeds: [
+            new EmbedBuilder()
+              .setColor(Colors.White)
+              .setAuthor({
+                iconURL: interaction.user.avatarURL(),
+                name:
+                  interaction.user.username +
+                  "#" +
+                  interaction.user.discriminator,
+              })
+              .setTitle("Rift | Greetings")
+              .setThumbnail(icons.greetingsMenu)
+              .setDescription(
+                `Now viewing the greetings message for this guild (${interaction.guild.name}).`
+              )
+              .setFields({ name: "Message:", value: `> ${Message}` }),
+          ],
+          components: [
+            new ActionRowBuilder().setComponents(
+              new ButtonBuilder()
+                .setCustomId("exit")
+                .setLabel("Exit")
+                .setStyle(ButtonStyle["Danger"])
+            ),
+          ],
+        });
       }
     }
   },

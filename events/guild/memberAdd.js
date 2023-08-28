@@ -14,16 +14,16 @@ module.exports = {
     const server = await storage.findOne({ guild: guild.id });
     if (!server.greeting.enabled) return;
     const { style } = server.greeting;
-
-    switch (style) {
-      case "dm":
-        {
-        }
-        break;
-      case "channel":
-        {
-        }
-        break;
-    }
+    // TODO: Finish greetings.
+    // switch (style) {
+    //   case "dm":
+    //     {
+    //     }
+    //     break;
+    //   case "channel":
+    //     {
+    //     }
+    //     break;
+    // }
   },
 };
